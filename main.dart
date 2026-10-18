@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/experiences_page.dart';
+import 'experiences_page.dart';
 
 void main() {
   runApp(const ExperiencesApp());
