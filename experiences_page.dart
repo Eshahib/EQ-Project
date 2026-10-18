@@ -1,28 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const ExperiencesApp());
-}
-
-class ExperiencesApp extends StatelessWidget {
-  const ExperiencesApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Experiences',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.indigo,
-        ),
-        useMaterial3: true,
-      ),
-      home: const ExperiencesPage(),
-    );
-  }
-}
-
 class ExperiencesPage extends StatelessWidget {
   const ExperiencesPage({super.key});
 
@@ -55,7 +32,7 @@ class ExperiencesPage extends StatelessWidget {
           tooltip: 'Back',
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Connect the previous page.
+            Navigator.pushReplacementNamed(context, '/chat');
           },
         ),
         title: const Text('Experiences'),
@@ -64,7 +41,7 @@ class ExperiencesPage extends StatelessWidget {
             tooltip: 'Home',
             icon: const Icon(Icons.home_outlined),
             onPressed: () {
-              // Connect the home page.
+              Navigator.pushReplacementNamed(context, '/chat');
             },
           ),
         ],
@@ -101,35 +78,24 @@ class ExperiencesPage extends StatelessWidget {
                       child: ListTile(
                         contentPadding: const EdgeInsets.all(16),
                         leading: CircleAvatar(
-                          child: Icon(
-                            experience['icon'] as IconData,
-                          ),
+                          child: Icon(experience['icon'] as IconData),
                         ),
-                        title: Text(
-                          experience['title'] as String,
-                        ),
+                        title: Text(experience['title'] as String),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                experience['description'] as String,
-                              ),
+                              Text(experience['description'] as String),
                               const SizedBox(height: 8),
                               Text(
                                 experience['date'] as String,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall,
+                                style: Theme.of(context).textTheme.bodySmall,
                               ),
                             ],
                           ),
                         ),
-                        trailing: const Icon(
-                          Icons.chevron_right,
-                        ),
+                        trailing: const Icon(Icons.chevron_right),
                         onTap: () {
                           // Connect experience details.
                         },
@@ -150,7 +116,7 @@ class ExperiencesPage extends StatelessWidget {
                 children: [
                   OutlinedButton.icon(
                     onPressed: () {
-                      // Connect AI chatbot.
+                      Navigator.pushReplacementNamed(context, '/chat');
                     },
                     icon: const Icon(Icons.smart_toy_outlined),
                     label: const Text('AI Chatbot'),
@@ -164,7 +130,7 @@ class ExperiencesPage extends StatelessWidget {
                   ),
                   OutlinedButton.icon(
                     onPressed: () {
-                      // Connect sign-in.
+                      Navigator.pushReplacementNamed(context, '/sign-in');
                     },
                     icon: const Icon(Icons.login),
                     label: const Text('Sign In'),
