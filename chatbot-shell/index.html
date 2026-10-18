@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic page setup. The site currently runs without a server or framework. -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101729" />
+  <title>AI Friend | HPU Student Support</title>
+  <!-- Keep styles and behavior in separate files for easier team integration. -->
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="chat-page" aria-label="AI Friend chat page">
+    <!-- Header: logo/title, future Saved Experiences route, and session control. -->
+    <header class="topbar">
+      <div class="brand" aria-label="AI Friend, for HPU students">
+        <!-- The supplied HPU artwork is used as the chat identity. -->
+        <span class="brand-icon"><img src="assets/hpu-logo.png" alt="HPU" /></span>
+        <span class="brand-text">AI Friend <small>For HPU students</small></span>
+      </div>
+      <nav class="header-actions" aria-label="Chat navigation">
+        <!-- This file intentionally does not exist yet; another team member will build it. -->
+        <a class="saved-link" href="saved-experiences.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.8A1.8 1.8 0 0 1 6.8 3h10.4A1.8 1.8 0 0 1 19 4.8V21l-7-4.5L5 21V4.8Z"/></svg>
+          <span>Saved Experiences</span>
+        </a>
+        <!-- Ending a conversation stores its messages locally for future integration. -->
+        <button class="end-button" id="endChatBtn" type="button">End Chat</button>
+      </nav>
+    </header>
+
+    <!-- Conversation begins after the team's survey page; no quick-start options. -->
+    <section class="chat-main" aria-label="Conversation with AI Friend">
+      <div class="messages" id="messages" role="log" aria-label="Chat messages" aria-live="polite">
+        <!-- script.js inserts an initial assistant greeting here on page load. -->
+        <div class="message-thread" id="messageThread"></div>
+        <!-- AI response loading indicator.
+          Hidden until AI Friend begins generating a response. -->
+        <div id="aiLoading" class="ai-loading" role="status"
+          aria-live="polite" hidden>
+
+          <!-- Animated spinning circle -->
+          <span class="loading-spinner" aria-hidden="true"></span>
+
+          <!-- Loading message -->
+          <span>AI Friend is responding...</span>
+
+        </div>
+      </div>
+
+      <!-- Message composer: typed text and optional browser speech-to-text. -->
+      <div class="composer-area" id="composerArea">
+        <form class="composer" id="chatForm" autocomplete="off">
+          <label class="sr-only" for="messageInput">Message AI Friend</label>
+          <textarea id="messageInput" rows="1" maxlength="5000" placeholder="Share what's on your mind..." aria-label="Message AI Friend"></textarea>
+          <div class="composer-bottom">
+            <span class="composer-hint" id="speechHint" role="status" aria-live="polite">Enter to send · Shift + Enter for a new line</span>
+            <div class="composer-actions">
+              <!-- Emotion picker: allows students to express how they feel. -->
+              <div class="emotion-picker">
+
+                  <!-- Button to open and close the emotion menu. -->
+                  <button
+                      type="button"
+                      id="emotionBtn"
+                      class="emotion-btn"
+                      aria-label="Choose an emotion"
+                      aria-expanded="false"
+                      aria-controls="emotionMenu"
+                      title="Choose an emotion">
+                      😊
+                  </button>
+
+                  <!-- Emotion menu, hidden until the button is clicked. -->
+                  <div id="emotionMenu" class="emotion-menu" hidden>
+
+                      <p class="emotion-title">How are you feeling?</p>
+
+                      <div class="emotion-grid">
+                          <button type="button" class="emotion-option" data-emotion="😊" data-label="Happy">😊 <span>Happy</span></button>
+                          <button type="button" class="emotion-option" data-emotion="😌" data-label="Calm">😌 <span>Calm</span></button>
+                          <button type="button" class="emotion-option" data-emotion="🥰" data-label="Loved">🥰 <span>Loved</span></button>
+                          <button type="button" class="emotion-option" data-emotion="😐" data-label="Neutral">😐 <span>Neutral</span></button>
+                          <button type="button" class="emotion-option" data-emotion="😕" data-label="Confused">😕 <span>Confused</span></button>
+                          <button type="button" class="emotion-option" data-emotion="😟" data-label="Worried">😟 <span>Worried</span></button>
+                          <button type="button" class="emotion-option" data-emotion="😰" data-label="Anxious">😰 <span>Anxious</span></button>
+                          <button type="button" class="emotion-option" data-emotion="😢" data-label="Sad">😢 <span>Sad</span></button>
+                          <button type="button" class="emotion-option" data-emotion="😠" data-label="Angry">😠 <span>Angry</span></button>
+                          <button type="button" class="emotion-option" data-emotion="😩" data-label="Overwhelmed">😩 <span>Overwhelmed</span></button>
+                          <button type="button" class="emotion-option" data-emotion="😴" data-label="Tired">😴 <span>Tired</span></button>
+                          <button type="button" class="emotion-option" data-emotion="🥹" data-label="Hopeful">🥹 <span>Hopeful</span></button>
+                      </div>
+                  </div>
+              </div>
+              <!-- Voice input only transcribes speech; it does not call an AI. -->
+              <button type="button" id="micBtn" class="mic-button" aria-label="Start voice typing" aria-pressed="false" title="Use speech to text">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5m-4 0h8"/></svg>
+              </button>
+              <button type="submit" id="sendBtn" class="send-button" aria-label="Send message" disabled>↑</button>
+            </div>
+          </div>
+        </form>
+        <!-- Support information remains available regardless of chat state. -->
+        <p class="support-note">AI Friend is not a replacement for professional care. For immediate danger, call 911. In the U.S., call or text <a href="https://988lifeline.org/" target="_blank" rel="noopener noreferrer">988</a> for crisis support.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

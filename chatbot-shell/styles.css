@@ -1,0 +1,283 @@
+/* ---------- Theme and reset ---------- */
+:root {
+  color-scheme: dark;
+  --bg: #0c1220;
+  --surface: #172338;
+  --stroke: #26364e;
+  --text: #f1f5fc;
+  --muted: #a4b1c6;
+  --accent: #9c92ff;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); }
+button, textarea { font: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+
+/* ---------- Full-height page and top navigation ---------- */
+.chat-page { min-height: 100dvh; display: flex; flex-direction: column; }
+.topbar {
+  min-height: 84px;
+  padding: 16px clamp(18px, 5vw, 70px);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--stroke);
+}
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 760; font-size: 18px; letter-spacing: -.03em; }
+/* Purple HPU avatar; logo image contains only the user-provided HPU mark. */
+.brand-icon, .assistant-avatar {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #352469;
+  border: 1px solid #62509d;
+}
+.brand-icon { width: 48px; height: 48px; border-radius: 13px; }
+.brand-icon img, .assistant-avatar img { display: block; width: 90%; height: 90%; object-fit: contain; }
+.brand-text small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; font-weight: 500; letter-spacing: .02em; }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.saved-link, .end-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 11px 14px;
+  border: 1px solid #374766;
+  border-radius: 11px;
+  background: #172238;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.saved-link svg { width: 18px; height: 18px; color: #c6beff; }
+.saved-link:hover, .end-button:hover { background: #26344f; border-color: #857aef; }
+.end-button { border-color: #73516d; color: #ffd5ea; }
+.end-button:disabled { opacity: .5; cursor: default; }
+
+/* ---------- Scrollable chat thread ---------- */
+.chat-main { flex: 1; display: flex; flex-direction: column; min-height: 0; height: calc(100dvh - 84px); }
+.messages { min-height: 0; flex: 1; overflow-y: auto; padding: 28px 24px; }
+.message-thread { width: 100%; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.message { display: flex; align-items: flex-start; gap: 12px; }
+.message.user { justify-content: flex-end; }
+.assistant-avatar { width: 42px; height: 42px; border-radius: 12px; }
+.message-body {
+  max-width: min(82%, 660px);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border: 1px solid #35425b;
+  border-radius: 15px 15px 15px 4px;
+  background: #19263b;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.message.user .message-body { background: #302e58; border-color: #504a83; border-radius: 15px 15px 4px 15px; }
+/* End-of-chat notice appears in the thread without restarting a new chat. */
+.ended-notice { text-align: center; padding: 22px; border: 1px solid #3b4465; border-radius: 16px; background: #161e32; }
+.ended-notice h2 { margin: 0 0 8px; font-size: 19px; }
+.ended-notice p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.ended-notice a { color: #c4bdff; }
+
+/* ---------- Message entry and voice controls ---------- */
+.composer-area { width: 100%; max-width: 870px; padding: 0 24px 16px; margin: 0 auto; }
+.composer { border: 1px solid #3a4b67; border-radius: 18px; background: var(--surface); padding: 15px 16px 10px; box-shadow: 0 8px 28px #02071525; }
+.composer:focus-within { border-color: #9289df; }
+.composer textarea { display: block; width: 100%; resize: none; max-height: 160px; overflow-y: auto; background: transparent; border: 0; outline: 0; color: var(--text); line-height: 1.5; font-size: 14px; padding: 2px 0; min-height: 28px; }
+.composer textarea::placeholder { color: #9aa8bd; }
+.composer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 10px; }
+.composer-hint { color: #a2aec2; font-size: 11px; line-height: 1.4; }
+.composer-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.mic-button, .send-button { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; }
+.mic-button { border: 1px solid #465372; background: #24334c; color: #e0defe; }
+.mic-button svg { width: 18px; height: 18px; }
+.mic-button:hover { background: #344562; }
+.mic-button.listening { background: #56334e; border-color: #ed91bc; color: #ffd3e7; animation: pulse 1.4s infinite; }
+.send-button { border: 0; background: var(--accent); color: #14152d; font-size: 23px; font-weight: 800; }
+.send-button:hover:not(:disabled) { background: #b9b2ff; }
+.send-button:disabled, .mic-button:disabled { opacity: .4; cursor: not-allowed; }
+.support-note { text-align: center; color: #8596af; font-size: 11px; line-height: 1.6; margin: 11px auto 0; max-width: 680px; }
+.support-note a { color: #bab3ff; text-decoration: underline; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 6px #ed91bc1e; } }
+
+/* ---------- Smaller-screen layout ---------- */
+@media (max-width: 700px) {
+  .topbar { min-height: 73px; padding: 12px 15px; }
+  .chat-main { height: calc(100dvh - 73px); }
+  .messages { padding: 18px 13px; }
+  .composer-area { padding: 0 12px 12px; }
+  .support-note { font-size: 10px; }
+  .saved-link, .end-button { padding: 10px; font-size: 12px; }
+  .saved-link svg { width: 16px; height: 16px; }
+  .brand { font-size: 16px; }
+  .brand-icon { width: 40px; height: 40px; }
+}
+@media (max-width: 510px) {
+  .topbar { flex-wrap: wrap; }
+  .header-actions { width: 100%; justify-content: flex-end; }
+  .chat-main { height: calc(100dvh - 120px); }
+  .message-body { max-width: 88%; }
+  .composer-hint { font-size: 10px; }
+}
+
+/* ============================================================
+   AI RESPONSE LOADING INDICATOR
+   ============================================================ */
+
+/* Position the loading indicator below the conversation. */
+.ai-loading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0;
+    color: #a8a8c0;
+    font-size: 14px;
+}
+
+/* Ensure the indicator disappears when hidden is applied. */
+.ai-loading[hidden] {
+    display: none;
+}
+
+/* Circular loading animation. */
+.loading-spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid #3a3158;
+    border-top-color: #a78bfa;
+    border-radius: 50%;
+    animation: ai-spin 0.8s linear infinite;
+    flex-shrink: 0;
+}
+
+/* Rotate the loading circle continuously. */
+@keyframes ai-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Align the loading spinner with the HPU chatbot icons. */
+.ai-loading {
+    width: min(100% - 32px, 660px);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+
+    /* Shift the spinner left to align with the HPU avatar. */
+    transform: translateX(-70px);
+}
+
+
+/* ============================================================
+   EMOTION PICKER
+   ============================================================ */
+
+/* Anchors the popup above the emotion button. */
+.emotion-picker {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Match the existing chat composer controls. */
+.emotion-btn {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1c2940;
+    border: 1px solid #34435c;
+    border-radius: 12px;
+    font-size: 22px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.emotion-btn:hover {
+    background: #293957;
+}
+
+.emotion-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* Popup displayed above the emotion button. */
+.emotion-menu {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 0;
+    z-index: 100;
+    width: 290px;
+    max-width: calc(100vw - 32px);
+    padding: 15px;
+    background: #172238;
+    border: 1px solid #36435c;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Respect the HTML hidden attribute. */
+.emotion-menu[hidden] {
+    display: none;
+}
+
+.emotion-title {
+    margin: 0 0 12px;
+    color: #e5e8f5;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Arrange emotion choices into a compact grid. */
+.emotion-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+/* Individual emotion selection. */
+.emotion-option {
+    min-width: 0;
+    padding: 10px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: #212e47;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: #e5e8f5;
+    font-size: 23px;
+    cursor: pointer;
+}
+
+.emotion-option span {
+    font-size: 11px;
+}
+
+.emotion-option:hover,
+.emotion-option:focus-visible {
+    background: #382c60;
+    border-color: #9070df;
+}
+
+@media (max-width: 480px) {
+    .emotion-menu {
+        width: 240px;
+    }
+}
