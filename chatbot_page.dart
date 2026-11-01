@@ -18,7 +18,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
     ),
   ];
   String _selectedEmotion = '😊';
-  final String _previewEmotion = 'eager';
+  final String _previewEmotion = 'optimistic';
   bool _ended = false;
   bool _isResponding = false;
 
@@ -299,13 +299,22 @@ class FeelingsWheel extends StatelessWidget {
 
 class _FeelingsWheelPainter extends CustomPainter {
   _FeelingsWheelPainter({required this.emotion});
-
+  
   final String emotion;
 
   static const Size _imageSize = Size(2808, 2787);
   static const Offset _imageCenter = Offset(1404, 1383.5);
   static const double _outerR = 1358;
   static const double _innerR = 800;
+
+  static const _fills = [
+    Color(0x66FFF176), // 1st six: yellow
+    Color(0x664CAF50), // next six: green
+  ];
+  static const _outlines = [
+    Color(0xFFFFC928), // yellow
+    Color(0xFF4CAF50), // green
+  ];
 
   // Each emotion occupies one individual 10-degree segment.
   // These are the six outer segments in the HAPPY section.
@@ -316,6 +325,12 @@ class _FeelingsWheelPainter extends CustomPainter {
     'moved': [-math.pi / 3, -5 * math.pi / 18],
     'satisfied': [-5 * math.pi / 18, -2 * math.pi / 9],
     'pleased': [-2 * math.pi / 9, -math.pi / 6],
+    'at ease': [-math.pi / 6, -math.pi / 9],        
+    'settled': [-math.pi / 9, -math.pi / 18],       
+    'optimistic': [-math.pi / 18, 0],               
+    'inspired': [0, math.pi / 18],                  
+    'warm': [math.pi / 18, math.pi / 9],            
+    'tender': [math.pi / 9, math.pi / 6],           
   };
 
   @override
@@ -352,17 +367,20 @@ class _FeelingsWheelPainter extends CustomPainter {
       )
       ..arcTo(innerRect, end, -sweep, false)
       ..close();
+    
+    final index = emotionAngles.keys
+        .toList()
+        .indexOf(emotion.trim().toLowerCase());
+    final section = (index ~/ 6).clamp(0, _fills.length - 1);
 
-    // Subtle transparent highlight.
     final highlight = Paint()
-      ..color = const Color(0x66FFF176)
+      ..color = _fills[section]
       ..style = PaintingStyle.fill;
 
     final outline = Paint()
-      ..color = const Color(0xFFFFC928)
+      ..color = _outlines[section]
       ..strokeWidth = 2.5
       ..style = PaintingStyle.stroke;
-
     canvas.drawPath(path, highlight);
     canvas.drawPath(path, outline);
   }
