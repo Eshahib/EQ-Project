@@ -280,7 +280,7 @@ class FeelingsWheel extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               Image.asset(
-                'flutterApp/assets/feelings_wheel.png',
+                'flutterApp/assets/hpu_feelings_wheel_full.png',
                 fit: BoxFit.contain,
               ),
               if (selectedEmotion != null)
@@ -321,8 +321,8 @@ class _FeelingsWheelPainter extends CustomPainter {
 
     // The image's actual wheel center is offset from the image center.
     final center = Offset(
-      size.width * 0.5714,
-      size.height * 0.5714,
+      size.width * .5714,
+      size.height * .5714,
     );
 
     // Highlight ONLY the outer ring.
