@@ -18,7 +18,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
     ),
   ];
   String _selectedEmotion = '😊';
-  final String _previewEmotion = 'thrilled';
+  final String _previewEmotion = 'eager';
   bool _ended = false;
   bool _isResponding = false;
 
@@ -302,6 +302,11 @@ class _FeelingsWheelPainter extends CustomPainter {
 
   final String emotion;
 
+  static const Size _imageSize = Size(2808, 2787);
+  static const Offset _imageCenter = Offset(1404, 1383.5);
+  static const double _outerR = 1358;
+  static const double _innerR = 800;
+
   // Each emotion occupies one individual 10-degree segment.
   // These are the six outer segments in the HAPPY section.
   static final Map<String, List<double>> emotionAngles = {
@@ -316,32 +321,24 @@ class _FeelingsWheelPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final angles = emotionAngles[emotion.trim().toLowerCase()];
-
     if (angles == null) return;
 
-    // The image's actual wheel center is offset from the image center.
-    final center = Offset(
-      size.width * .5714,
-      size.height * .5714,
-    );
+    // Where BoxFit.contain actually draws the image inside this box.
+    final fitted = applyBoxFit(BoxFit.contain, _imageSize, size);
+    final dest =
+        Alignment.center.inscribe(fitted.destination, Offset.zero & size);
+    final scale = dest.width / _imageSize.width;
 
-    // Highlight ONLY the outer ring.
-    final outerRadius = size.shortestSide * 0.5385;
-    final innerRadius = size.shortestSide * 0.302;
+    final center = dest.topLeft + _imageCenter * scale;
+    final outerRadius = _outerR * scale;
+    final innerRadius = _innerR * scale;
 
     final start = angles[0];
     final sweep = angles[1] - angles[0];
     final end = start + sweep;
 
-    final outerRect = Rect.fromCircle(
-      center: center,
-      radius: outerRadius,
-    );
-
-    final innerRect = Rect.fromCircle(
-      center: center,
-      radius: innerRadius,
-    );
+    final outerRect = Rect.fromCircle(center: center, radius: outerRadius);
+    final innerRect = Rect.fromCircle(center: center, radius: innerRadius);
 
     final path = Path()
       ..moveTo(
