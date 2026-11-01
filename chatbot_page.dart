@@ -18,7 +18,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
     ),
   ];
   String _selectedEmotion = '😊';
-  final String _previewEmotion = 'optimistic';
+  final String _previewEmotion = 'bold';
   bool _ended = false;
   bool _isResponding = false;
 
@@ -310,10 +310,18 @@ class _FeelingsWheelPainter extends CustomPainter {
   static const _fills = [
     Color(0x66FFF176), // 1st six: yellow
     Color(0x664CAF50), // next six: green
+    Color(0x6664B5F6), // light blue
+    Color(0x6678909C), // 4: SAD, steel blue
+    Color(0x669575CD), // 5: AFRAID, purple
+    Color(0x66EF5350), // 6: ANGRY, red
   ];
   static const _outlines = [
     Color(0xFFFFC928), // yellow
     Color(0xFF4CAF50), // green
+    Color(0xFF2196F3), // light blue
+    Color(0xFF546E7A), // steel blue
+    Color(0xFF673AB7), // purple
+    Color(0xFFD32F2F), // red
   ];
 
   // Each emotion occupies one individual 10-degree segment.
@@ -330,7 +338,31 @@ class _FeelingsWheelPainter extends CustomPainter {
     'optimistic': [-math.pi / 18, 0],               
     'inspired': [0, math.pi / 18],                  
     'warm': [math.pi / 18, math.pi / 9],            
-    'tender': [math.pi / 9, math.pi / 6],           
+    'tender': [math.pi / 9, math.pi / 6],
+    'capable': [math.pi / 6, 2 * math.pi / 9],           
+    'bold': [2 * math.pi / 9, 5 * math.pi / 18],        
+    'engaged': [5 * math.pi / 18, math.pi / 3],          
+    'interested': [math.pi / 3, 7 * math.pi / 18],       
+    'accomplished': [7 * math.pi / 18, 4 * math.pi / 9],
+    'valued': [4 * math.pi / 9, math.pi / 2],
+    'isolated': [math.pi / 2, 5 * math.pi / 9],          
+    'left out': [5 * math.pi / 9, 11 * math.pi / 18],    
+    'let down': [11 * math.pi / 18, 2 * math.pi / 3],    
+    'deflated': [2 * math.pi / 3, 13 * math.pi / 18],    
+    'heartbroken': [13 * math.pi / 18, 7 * math.pi / 9], 
+    'bereft': [7 * math.pi / 9, 5 * math.pi / 6],
+    'worried': [5 * math.pi / 6, 8 * math.pi / 9],           
+    'tense': [8 * math.pi / 9, 17 * math.pi / 18],           
+    'overwhelmed': [17 * math.pi / 18, math.pi],             
+    'stuck': [math.pi, 19 * math.pi / 18],                
+    'uncertain': [19 * math.pi / 18, 10 * math.pi / 9],      
+    'doubtful': [10 * math.pi / 9, 7 * math.pi / 6],         
+    'blocked': [7 * math.pi / 6, 11 * math.pi / 9],          
+    'irritated': [11 * math.pi / 9, 23 * math.pi / 18],      
+    'bitter': [23 * math.pi / 18, 4 * math.pi / 3],       
+    'wronged': [4 * math.pi / 3, 25 * math.pi / 18],         
+    'outraged': [25 * math.pi / 18, 13 * math.pi / 9],      
+    'livid': [13 * math.pi / 9, 3 * math.pi / 2],                                  
   };
 
   @override
