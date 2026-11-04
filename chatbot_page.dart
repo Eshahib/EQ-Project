@@ -290,7 +290,7 @@ class FeelingsWheel extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               Image.asset(
-                'web/hpu_feelings_wheel_full.png',
+                'flutterApp/assets/hpu_feelings_wheel_full.png',
                 fit: BoxFit.contain,
               ),
               if (selectedEmotion != null)
