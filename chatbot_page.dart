@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'survey_page.dart';
 
 class ChatbotPage extends StatefulWidget {
-  const ChatbotPage({super.key});
+  const ChatbotPage({super.key, this.surveyResult});
+
+  final EmotionSurveyResult? surveyResult;
 
   @override
   State<ChatbotPage> createState() => _ChatbotPageState();
@@ -10,32 +13,40 @@ class ChatbotPage extends StatefulWidget {
 
 class _ChatbotPageState extends State<ChatbotPage> {
   final _messageController = TextEditingController();
-  final _messages = <_ChatMessage>[
-    const _ChatMessage(
-      text:
-          'Place holder message where we will put the response to the survey part',
-      isUser: false,
-    ),
-  ];
+  final _messages = <_ChatMessage>[];
+
+  @override
+  void initState() {
+    super.initState();
+    final survey = widget.surveyResult;
+    final selected = survey?.preciseEmotion.trim().toLowerCase();
+    _wheelEmotion = selected != null &&
+            _FeelingsWheelPainter.emotionAngles.containsKey(selected)
+        ? selected
+        : null;
+    if (_wheelEmotion != null) {
+      final index = _FeelingsWheelPainter.emotionAngles.keys
+          .toList().indexOf(_wheelEmotion!);
+      _selectedEmotion = _groupEmoji[index ~/ 6];
+    }
+    _messages.add(
+      _ChatMessage(
+        text: survey == null
+            ? 'Welcome to AI Friend. How are you feeling today?'
+            : '${survey.summary}\n\n'
+                  'This is a placeholder response about how you are feeling.',
+        isUser: false,
+      ),
+    );
+  }
+
   String _selectedEmotion = '😊';
-  final String _previewEmotion = 'bold';
+  String? _wheelEmotion;
   bool _ended = false;
   bool _isResponding = false;
 
-  static const _emotions = [
-    ['😊', 'Happy'],
-    ['😌', 'Calm'],
-    ['🥰', 'Loved'],
-    ['😐', 'Neutral'],
-    ['😕', 'Confused'],
-    ['😟', 'Worried'],
-    ['😰', 'Anxious'],
-    ['😢', 'Sad'],
-    ['😠', 'Angry'],
-    ['😩', 'Overwhelmed'],
-    ['😴', 'Tired'],
-    ['🥹', 'Hopeful'],
-  ];
+  // The picker uses the same exact 36 names as the survey and wheel.
+  static const _groupEmoji = ['😊', '😌', '💪', '😢', '😟', '😠'];
 
   @override
   void dispose() {
@@ -109,19 +120,26 @@ class _ChatbotPageState extends State<ChatbotPage> {
           child: Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: _emotions
-                .map(
-                  (emotion) => OutlinedButton(
+            children: _FeelingsWheelPainter.emotionAngles.keys
+                .toList()
+                .asMap()
+                .entries
+                .map((entry) {
+                  final name = entry.value;
+                  final emoji = _groupEmoji[entry.key ~/ 6];
+                  return OutlinedButton(
                     onPressed: () {
-                      setState(() => _selectedEmotion = emotion[0]);
+                      setState(() {
+                        _selectedEmotion = emoji;
+                        _wheelEmotion = name;
+                      });
                       Navigator.pop(context);
                       _messageController.text +=
-                          '${_messageController.text.isEmpty ? '' : ' '}${emotion[0]} ${emotion[1]} ';
+                          '${_messageController.text.isEmpty ? '' : ' '}$emoji $name ';
                     },
-                    child: Text('${emotion[0]} ${emotion[1]}'),
-                  ),
-                )
-                .toList(),
+                    child: Text('$emoji $name'),
+                  );
+                }).toList(),
           ),
         ),
       ),
@@ -151,29 +169,21 @@ class _ChatbotPageState extends State<ChatbotPage> {
       ),
       body: Column(
         children: [
-              Expanded(
-               child: ListView.builder(
-                padding: const EdgeInsets.all(24),
-                 itemCount: _messages.length + 1,
-                 itemBuilder: (context, index) {
-                 if (index == _messages.length) {
-                    return Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 550,
-            ),
-            child: FeelingsWheel(
-              selectedEmotion: _previewEmotion,
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(24),
+              itemCount: _messages.length + 1,
+              itemBuilder: (context, index) {
+                if (index == _messages.length) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 16),
+                    child: FeelingsWheel(selectedEmotion: _wheelEmotion),
+                  );
+                }
+                return _MessageBubble(message: _messages[index]);
+              },
             ),
           ),
-        );
-      }
-      return _MessageBubble(
-        message: _messages[index],
-      );
-    },
-  ),
-),
           if (_isResponding)
             const Padding(
               padding: EdgeInsets.only(bottom: 8),
@@ -280,7 +290,7 @@ class FeelingsWheel extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               Image.asset(
-                'flutterApp/assets/hpu_feelings_wheel_full.png',
+                'web/hpu_feelings_wheel_full.png',
                 fit: BoxFit.contain,
               ),
               if (selectedEmotion != null)
@@ -387,6 +397,7 @@ class _FeelingsWheelPainter extends CustomPainter {
     final outerRect = Rect.fromCircle(center: center, radius: outerRadius);
     final innerRect = Rect.fromCircle(center: center, radius: innerRadius);
 
+    // Shade the complete radial path (center → selected outer feeling).
     final path = Path()
       ..moveTo(
         center.dx + outerRadius * math.cos(start),
