@@ -73,14 +73,14 @@ class _EmotionSurveyPageState extends State<EmotionSurveyPage> {
       'Content': ['Satisfied', 'Pleased'],
     },
     'Calm': {
-      'Peaceful': ['At ease', 'Settled'],
-      'Positive': ['Optimistic', 'Inspired'],
-      'Connected': ['Warm', 'Tender'],
+      'Relaxed': ['At ease', 'Settled'],
+      'Hopeful': ['Optimistic', 'Inspired'],
+      'Caring': ['Warm', 'Tender'],
     },
     'Strong': {
       'Confident': ['Capable', 'Bold'],
-      'Involved': ['Engaged', 'Interested'],
-      'Appreciated': ['Accomplished', 'Valued'],
+      'Curious': ['Engaged', 'Interested'],
+      'Proud': ['Accomplished', 'Valued'],
     },
     'Sad': {
       'Lonely': ['Isolated', 'Left out'],
@@ -89,8 +89,8 @@ class _EmotionSurveyPageState extends State<EmotionSurveyPage> {
     },
     'Afraid': {
       'Anxious': ['Worried', 'Tense'],
-      'Overloaded': ['Overwhelmed', 'Stuck'],
-      'Unsure': ['Uncertain', 'Doubtful'],
+      'Helpless': ['Overwhelmed', 'Stuck'],
+      'Insecure': ['Uncertain', 'Doubtful'],
     },
     'Angry': {
       'Frustrated': ['Blocked', 'Irritated'],
