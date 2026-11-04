@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _signIn() {
     if (_formKey.currentState!.validate()) {
-      Navigator.pushReplacementNamed(context, '/chat');
+      Navigator.pushReplacementNamed(context, '/survey');
     }
   }
 
